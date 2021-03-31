@@ -52,3 +52,19 @@ message MsgSend {
 // MsgSendResponse defines the Msg/Send response type.
 message MsgSendResponse {}
 
+message MsgRegisterProposal {
+    option (gogoproto.goproto_getters)  = true;
+    option (gogoproto.goproto_stringer) = true;
+
+    string title       = 1 [(gogoproto.moretags) = "yaml:\"title\""];
+    string description = 2 [(gogoproto.moretags) = "yaml:\"description\""];
+
+    // the port on which the packet will be sent
+    string source_port = 3 [
+        (gogoproto.moretags) = "yaml:\"source_port\""
+    ];
+    // the channel by which the packet will be sent
+    string source_channel = 4 [
+        (gogoproto.moretags) = "yaml:\"source_channel\""
+    ];
+}

@@ -1,0 +1,6 @@
+{
+  "title": "Test Proposal",
+  "description": "Registering interchain account",
+  "source_port": "ibcaccount",
+  "source_channel": "channel-0"
+}
