@@ -6,6 +6,7 @@ import (
 	// this line is used by starport scaffolding # 1
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
@@ -20,6 +21,11 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgSend{},
 		&MsgRegisterAccount{},
 	)
+	registry.RegisterImplementations(
+		(*govtypes.Content)(nil),
+		&MsgRegisterProposal{},
+	)
+
 }
 
 var (
