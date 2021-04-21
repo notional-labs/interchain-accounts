@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/cosmos/cosmos-sdk v0.42.3
+	github.com/cosmos/interchain-accounts v0.0.0-20210401090535-2bb75da7d83a
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.2 // indirect
@@ -25,7 +26,5 @@ require (
 )
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
-
-// replace github.com/cosmos/cosmos-sdk => /home/sean/git/cosmos/cosmos-sdk
 
 replace google.golang.org/grpc => google.golang.org/grpc v1.33.2

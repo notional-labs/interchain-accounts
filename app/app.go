@@ -85,6 +85,7 @@ import (
 	ibcaccounttypes "github.com/interchainberlin/ica/x/ibc-account/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	intertx "github.com/interchainberlin/ica/x/inter-tx"
 	intertxclient "github.com/interchainberlin/ica/x/inter-tx/client"
