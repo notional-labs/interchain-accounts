@@ -6,7 +6,7 @@ import (
 	"github.com/interchainberlin/ica/x/inter-tx/client/cli"
 )
 
-// ProposalHandler is the community spend proposal handler.
 var (
-	ProposalHandler = govclient.NewProposalHandler(cli.GetCmdSubmitProposal, rest.ProposalRESTHandler)
+	SendProposalHandler = govclient.NewProposalHandler(cli.GetCmdSubmitSendProposal, rest.ProposalRESTHandler)
+	FundProposalHandler = govclient.NewProposalHandler(cli.GetCmdSubmitFundProposal, rest.ProposalRESTHandler)
 )

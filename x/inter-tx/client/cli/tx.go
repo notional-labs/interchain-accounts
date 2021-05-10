@@ -36,7 +36,9 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(
 		getRegisterAccountCmd(),
 		getSendTxCmd(),
-		GetCmdSubmitProposal(),
+		GetCmdSubmitSendProposal(),
+		GetCmdSubmitFundProposal(),
+		getRegisterCommunityAccountCmd(),
 	)
 
 	return cmd
@@ -77,9 +79,43 @@ func getRegisterAccountCmd() *cobra.Command {
 	return cmd
 }
 
+func getRegisterCommunityAccountCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "register-community-pool",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			sourcePort := viper.GetString(FlagSourcePort)
+			sourceChannel := viper.GetString(FlagSourceChannel)
+
+			msg := types.NewMsgRegisterCommunityAccount(
+				sourcePort,
+				sourceChannel,
+			)
+
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+	cmd.Flags().AddFlagSet(fsSourcePort)
+	cmd.Flags().AddFlagSet(fsSourceChannel)
+
+	_ = cmd.MarkFlagRequired(FlagSourcePort)
+	_ = cmd.MarkFlagRequired(FlagSourceChannel)
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
 func getSendTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:  "send [type] [to_address] [amount]",
+		Use:  "send [type] [to_address] [amount] [coin]",
 		Args: cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -99,6 +135,7 @@ func getSendTxCmd() *cobra.Command {
 				return err
 			}
 
+			coin := args[3]
 			sourcePort := viper.GetString(FlagSourcePort)
 			sourceChannel := viper.GetString(FlagSourceChannel)
 
@@ -109,6 +146,7 @@ func getSendTxCmd() *cobra.Command {
 				fromAddress,
 				toAddress,
 				amount,
+				coin,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -127,32 +165,35 @@ func getSendTxCmd() *cobra.Command {
 	return cmd
 }
 
-const HELPER_TEXT = `Submit a community pool register proposal along with an initial deposit.
+const SEND_HELPER_TEXT = `Submit a community pool send proposal along with an initial deposit.
 The proposal details must be supplied via a JSON file.
 
 Example:
-$ %s tx gov submit-proposal community-pool-register <path/to/proposal.json> --from=<key_or_address>
+$ %s tx gov submit-proposal community-pool-send <path/to/proposal.json> --from=<key_or_address>
 
 Where proposal.json contains:
 
 {
   "title": "I",
-  "description": "Registering Interchain Account",
+  "description": "Send tokens to account on host chain",
   "sourcePort": "ibcaccount",
-  "sourceChannel": "1000stake",
+  "sourceChannel": "channel-0",
   "deposit": "1000stake",
+	"toAddress": "cosmos1mjk79fjjgpplak5wq838w0yd982gzkyfrk07am",
+	"amount": "5",
+	"coin": "stake"
 }
 `
 
-func GetCmdSubmitProposal() *cobra.Command {
+func GetCmdSubmitSendProposal() *cobra.Command {
 	bech32PrefixAccAddr := sdk.GetConfig().GetBech32AccountAddrPrefix()
 
 	cmd := &cobra.Command{
-		Use:   "community-pool-register [proposal-file]",
+		Use:   "community-pool-send [proposal-file]",
 		Args:  cobra.ExactArgs(1),
-		Short: "Submit a community pool register interchain-account proposal",
+		Short: "Submit a community pool send proposal",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(HELPER_TEXT, version.AppName, bech32PrefixAccAddr),
+			fmt.Sprintf(SEND_HELPER_TEXT, version.AppName, bech32PrefixAccAddr),
 		),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -167,7 +208,7 @@ func GetCmdSubmitProposal() *cobra.Command {
 			from := clientCtx.GetFromAddress()
 			deposit, err := sdk.ParseCoinsNormalized("50stake")
 
-			content := types.NewMsgRegisterProposal(proposal.Title, proposal.Description, proposal.SourcePort, proposal.SourceChannel)
+			content := types.NewMsgSendProposal(proposal.Title, proposal.Description, proposal.SourcePort, proposal.SourceChannel, proposal.ToAddress, proposal.Amount, proposal.Coin)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {
@@ -188,8 +229,83 @@ func GetCmdSubmitProposal() *cobra.Command {
 	return cmd
 }
 
-func ParseCommunityPoolSpendProposalWithDeposit(cdc codec.JSONMarshaler, proposalFile string) (types.MsgRegisterProposal, error) {
-	proposal := types.MsgRegisterProposal{}
+func ParseCommunityPoolSpendProposalWithDeposit(cdc codec.JSONMarshaler, proposalFile string) (types.MsgSendProposal, error) {
+	proposal := types.MsgSendProposal{}
+
+	contents, err := ioutil.ReadFile(proposalFile)
+	if err != nil {
+		return proposal, err
+	}
+
+	if err = cdc.UnmarshalJSON(contents, &proposal); err != nil {
+		return proposal, err
+	}
+
+	return proposal, nil
+}
+
+const FUND_HELPER_TEXT = `Submit a community pool fund proposal along with an initial deposit.
+The proposal details must be supplied via a JSON file.
+
+Example:
+$ %s tx gov submit-proposal community-pool-fund <path/to/proposal.json> --from=<key_or_address>
+
+Where proposal.json contains:
+
+{
+  "title": "I",
+  "description": "Funding community pool interchain account",
+  "sourceChannel": "channel-1",
+	"coin": "stake",
+}
+`
+
+func GetCmdSubmitFundProposal() *cobra.Command {
+	bech32PrefixAccAddr := sdk.GetConfig().GetBech32AccountAddrPrefix()
+
+	cmd := &cobra.Command{
+		Use:   "community-pool-fund [proposal-file]",
+		Args:  cobra.ExactArgs(1),
+		Short: "Submit a community pool fund proposal",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(FUND_HELPER_TEXT, version.AppName, bech32PrefixAccAddr),
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			proposal, err := ParseCommunityPoolFundProposalWithDeposit(clientCtx.JSONMarshaler, args[0])
+			if err != nil {
+				return err
+			}
+
+			from := clientCtx.GetFromAddress()
+			deposit, err := sdk.ParseCoinsNormalized("50stake")
+
+			content := types.NewMsgFundProposal(proposal.Title, proposal.Description, proposal.SourceChannel, proposal.Coin)
+
+			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
+			if err != nil {
+				return err
+			}
+			if err != nil {
+				return err
+			}
+
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	return cmd
+}
+
+func ParseCommunityPoolFundProposalWithDeposit(cdc codec.JSONMarshaler, proposalFile string) (types.MsgFundProposal, error) {
+	proposal := types.MsgFundProposal{}
 
 	contents, err := ioutil.ReadFile(proposalFile)
 	if err != nil {

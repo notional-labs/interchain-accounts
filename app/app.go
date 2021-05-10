@@ -106,7 +106,9 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 		distrclient.ProposalHandler,
 		upgradeclient.ProposalHandler,
 		upgradeclient.CancelProposalHandler,
-		intertxclient.ProposalHandler,
+		intertxclient.SendProposalHandler,
+		intertxclient.FundProposalHandler,
+
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 
@@ -324,11 +326,11 @@ func New(
 			// register the tx encoder for cosmos-sdk
 			"cosmos-sdk": ibcaccountkeeper.SerializeCosmosTx(appCodec, interfaceRegistry),
 		}, app.IBCKeeper.ChannelKeeper, &app.IBCKeeper.PortKeeper,
-		app.AccountKeeper, scopedIbcAccountKeeper, app.Router(), app,
-	)
+		app.AccountKeeper, scopedIbcAccountKeeper, app.Router(), app)
+
 	ibcAccountModule := ibcaccount.NewAppModule(app.IbcAccountKeeper)
 
-	app.InterTxKeeper = intertxkeeper.NewKeeper(appCodec, keys[intertxtypes.StoreKey], app.IbcAccountKeeper, app.DistrKeeper, app.AccountKeeper)
+	app.InterTxKeeper = intertxkeeper.NewKeeper(appCodec, keys[intertxtypes.StoreKey], app.IbcAccountKeeper, app.DistrKeeper, app.AccountKeeper, app.TransferKeeper)
 
 	// register the proposal types
 	govRouter := govtypes.NewRouter()
