@@ -94,6 +94,7 @@ func getRegisterCommunityAccountCmd() *cobra.Command {
 			msg := types.NewMsgRegisterCommunityAccount(
 				sourcePort,
 				sourceChannel,
+				clientCtx.GetFromAddress().String(),
 			)
 
 			if err := msg.ValidateBasic(); err != nil {
@@ -281,7 +282,7 @@ func GetCmdSubmitFundProposal() *cobra.Command {
 			}
 
 			from := clientCtx.GetFromAddress()
-			deposit, err := sdk.ParseCoinsNormalized("50stake")
+			deposit, err := sdk.ParseCoinsNormalized("1000000000stake")
 
 			content := types.NewMsgFundProposal(proposal.Title, proposal.Description, proposal.SourceChannel, proposal.Coin)
 

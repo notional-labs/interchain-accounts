@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/interchainberlin/ica/x/inter-tx/types"
@@ -57,7 +58,8 @@ func (k msgServer) RegisterCommunityPool(
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	acc := k.AuthKeeper.GetModuleAddress("distribution")
-
+	temp := acc.String()
+	fmt.Print(temp)
 	if acc == nil {
 		return &types.MsgRegisterCommunityAccountResponse{}, nil
 	}

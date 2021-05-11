@@ -21,10 +21,12 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		(*sdk.Msg)(nil),
 		&MsgSend{},
 		&MsgRegisterAccount{},
+		&MsgRegisterCommunityAccount{},
 	)
 	registry.RegisterImplementations(
 		(*govtypes.Content)(nil),
 		&MsgSendProposal{},
+		&MsgFundProposal{},
 	)
 
 }

@@ -49,11 +49,13 @@ func handleMsgFundProposal(ctx sdk.Context, msg *types.MsgFundProposal, k keeper
 
 	const portId = "transfer"
 
-	//TODO: get from state
-	const interchainAccountAddr = "cosmos17dtl0mjt3t77kpuhg2edqzjpszulwhgzuj9ljs"
+	interchainAccountAddr, err := k.GetIBCAccountAddr(ctx, "ibcaccount", "channel-0", senderAddr)
+	if err != nil {
+		return err
+	}
 
 	transferMsg := transferTypes.NewMsgTransfer(
-		portId, msg.SourceChannel, coin, senderAddr, interchainAccountAddr, clienttypes.ZeroHeight(), timeoutTimestamp,
+		portId, msg.SourceChannel, coin, senderAddr, interchainAccountAddr.String(), clienttypes.ZeroHeight(), timeoutTimestamp,
 	)
 
 	_, err = k.TransferKeeper.Transfer(sdk.WrapSDKContext(ctx), transferMsg)
@@ -93,11 +95,13 @@ func handleMsgSendProposal(ctx sdk.Context, msg *types.MsgSendProposal, k keeper
 	return nil
 }
 
-func NewRegisterInterchainAccountProposalHandler(k keeper.Keeper) govtypes.Handler {
+func NewInterchainAccountProposalHandler(k keeper.Keeper) govtypes.Handler {
 	return func(ctx sdk.Context, content govtypes.Content) error {
 		switch msg := content.(type) {
 		case *types.MsgSendProposal:
 			return handleMsgSendProposal(ctx, msg, k)
+		case *types.MsgFundProposal:
+			return handleMsgFundProposal(ctx, msg, k)
 		default:
 			return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized %s message type: %T", types.ModuleName, msg)
 		}

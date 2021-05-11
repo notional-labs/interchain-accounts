@@ -61,11 +61,12 @@ func (msg MsgRegisterAccount) GetSigners() []sdk.AccAddress {
 var _ sdk.Msg = &MsgRegisterCommunityAccount{}
 
 func NewMsgRegisterCommunityAccount(
-	port, channel string,
+	port, channel, signer string,
 ) *MsgRegisterCommunityAccount {
 	return &MsgRegisterCommunityAccount{
 		SourcePort:    port,
 		SourceChannel: channel,
+		Signer:        signer,
 	}
 }
 
@@ -89,7 +90,11 @@ func (msg MsgRegisterCommunityAccount) GetSignBytes() []byte {
 
 // GetSigners implements sdk.Msg
 func (msg MsgRegisterCommunityAccount) GetSigners() []sdk.AccAddress {
-	return nil
+	accAddr, err := sdk.AccAddressFromBech32(msg.Signer)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{accAddr}
 }
 
 //Send

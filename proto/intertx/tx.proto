@@ -42,6 +42,8 @@ message MsgRegisterCommunityAccount {
 
   // the channel by which the packet will be sent
   string source_channel = 3 [(gogoproto.moretags) = "yaml:\"source_channel\""];
+  
+  string signer = 4 [(gogoproto.moretags) = "yaml:\"signer\""];
 }
 
 message MsgRegisterCommunityAccountResponse {}

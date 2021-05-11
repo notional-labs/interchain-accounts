@@ -339,7 +339,7 @@ func New(
 		AddRoute(distrtypes.RouterKey, distr.NewCommunityPoolSpendProposalHandler(app.DistrKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
 		AddRoute(ibchost.RouterKey, ibcclient.NewClientUpdateProposalHandler(app.IBCKeeper.ClientKeeper)).
-		AddRoute(intertxtypes.RouterKey, intertx.NewRegisterInterchainAccountProposalHandler(app.InterTxKeeper))
+		AddRoute(intertxtypes.RouterKey, intertx.NewInterchainAccountProposalHandler(app.InterTxKeeper))
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := porttypes.NewRouter()
