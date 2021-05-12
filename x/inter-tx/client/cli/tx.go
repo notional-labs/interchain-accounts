@@ -201,7 +201,7 @@ func GetCmdSubmitSendProposal() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			proposal, err := ParseCommunityPoolSpendProposalWithDeposit(clientCtx.JSONMarshaler, args[0])
+			proposal, err := ParseCommunityPoolSendProposalWithDeposit(clientCtx.JSONMarshaler, args[0])
 			if err != nil {
 				return err
 			}
@@ -209,7 +209,7 @@ func GetCmdSubmitSendProposal() *cobra.Command {
 			from := clientCtx.GetFromAddress()
 			deposit, err := sdk.ParseCoinsNormalized("50stake")
 
-			content := types.NewMsgSendProposal(proposal.Title, proposal.Description, proposal.SourcePort, proposal.SourceChannel, proposal.ToAddress, proposal.Amount, proposal.Coin)
+			content := types.NewMsgSendProposal(proposal.Title, proposal.Description, "ibcaccount", proposal.SourceChannel, proposal.ToAddress, proposal.Amount, proposal.Coin)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {
@@ -230,7 +230,7 @@ func GetCmdSubmitSendProposal() *cobra.Command {
 	return cmd
 }
 
-func ParseCommunityPoolSpendProposalWithDeposit(cdc codec.JSONMarshaler, proposalFile string) (types.MsgSendProposal, error) {
+func ParseCommunityPoolSendProposalWithDeposit(cdc codec.JSONMarshaler, proposalFile string) (types.MsgSendProposal, error) {
 	proposal := types.MsgSendProposal{}
 
 	contents, err := ioutil.ReadFile(proposalFile)

@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/interchainberlin/ica/x/inter-tx/types"
@@ -42,6 +41,7 @@ func (k msgServer) Register(
 		msg.SourcePort,
 		msg.SourceChannel,
 	)
+
 	if err != nil {
 		return &types.MsgRegisterAccountResponse{}, err
 	}
@@ -56,10 +56,7 @@ func (k msgServer) RegisterCommunityPool(
 	msg *types.MsgRegisterCommunityAccount,
 ) (*types.MsgRegisterCommunityAccountResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-
 	acc := k.AuthKeeper.GetModuleAddress("distribution")
-	temp := acc.String()
-	fmt.Print(temp)
 	if acc == nil {
 		return &types.MsgRegisterCommunityAccountResponse{}, nil
 	}

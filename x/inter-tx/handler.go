@@ -33,14 +33,11 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 }
 
 func handleMsgFundProposal(ctx sdk.Context, msg *types.MsgFundProposal, k keeper.Keeper) error {
-
 	senderAddr := k.AuthKeeper.GetModuleAddress("distribution")
 
 	if senderAddr == nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized message type: %T", msg)
 	}
-
-	const timeoutTimestamp = ^uint64(0)
 
 	coin, err := sdk.ParseCoinNormalized(msg.Coin)
 	if err != nil {
@@ -49,17 +46,18 @@ func handleMsgFundProposal(ctx sdk.Context, msg *types.MsgFundProposal, k keeper
 
 	const portId = "transfer"
 
+	//TODO: this should get the address of the distribution modules interchain account
 	interchainAccountAddr, err := k.GetIBCAccountAddr(ctx, "ibcaccount", "channel-0", senderAddr)
 	if err != nil {
 		return err
 	}
 
+	const timeoutTimestamp = ^uint64(0)
 	transferMsg := transferTypes.NewMsgTransfer(
 		portId, msg.SourceChannel, coin, senderAddr, interchainAccountAddr.String(), clienttypes.ZeroHeight(), timeoutTimestamp,
 	)
 
 	_, err = k.TransferKeeper.Transfer(sdk.WrapSDKContext(ctx), transferMsg)
-
 	if err != nil {
 		return err
 	}
@@ -86,7 +84,6 @@ func handleMsgSendProposal(ctx sdk.Context, msg *types.MsgSendProposal, k keeper
 		msg.Coin,
 	)
 
-	const timeoutTimestamp = ^uint64(0)
 	_, err := msgServer.Send(sdk.WrapSDKContext(ctx), sendMsg)
 	if err != nil {
 		return err
@@ -96,6 +93,7 @@ func handleMsgSendProposal(ctx sdk.Context, msg *types.MsgSendProposal, k keeper
 }
 
 func NewInterchainAccountProposalHandler(k keeper.Keeper) govtypes.Handler {
+
 	return func(ctx sdk.Context, content govtypes.Content) error {
 		switch msg := content.(type) {
 		case *types.MsgSendProposal:
