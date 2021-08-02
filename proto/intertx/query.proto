@@ -6,7 +6,7 @@ option go_package = "github.com/cosmos/interchain-accounts/x/inter-tx/types";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "ibc/core/client/v1/client.proto";
-import "ibc/account/account.proto";
+import "ibc/applications/interchain_accounts/v1/account.proto";
 
 // Query defines the gRPC querier service.
 service Query {
