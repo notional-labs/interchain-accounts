@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Start the hermes relayer in multi-paths mode
-CONFIG_DIR=./network/hermes/config.toml
+. ./network/hermes/variables.sh
 
+# Start the hermes relayer in multi-paths mode
 echo "Starting hermes relayer..."
-hermes -c $CONFIG_DIR start
+$HERMES_BINARY -c $CONFIG_DIR start

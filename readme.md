@@ -12,9 +12,15 @@ make install
 # Hermes Relayer
 [Hermes](https://hermes.informal.systems/) is a Rust implementation of a relayer for the [Inter-Blockchain Communication (IBC)](https://ibcprotocol.org/) protocol.
 
-- Install [Rust](https://www.rust-lang.org/tools/install)
-- Install [Hermes](https://hermes.informal.systems/installation.html)
+In order to use the hermes relayer you will need to check out a specific branch that can be used with interchain-accounts. 
 
+Go to https://github.com/informalsystems/ibc-rs
+
+git checkout adi/ibc-go-1-proto
+cd relayer-cli
+cargo build
+
+In the variables.sh file inside /network/hermes/ replace the $HERMES_BINARY variable with a path to the hermes binary build from the previous step. You can find this in the /target/debug/ directory inside ibc-rs. 
 # Bootstrap two local chains & create a connection using the hermes relayer
 make init
 
