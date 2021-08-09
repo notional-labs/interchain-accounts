@@ -178,6 +178,8 @@ github.com/cosmos/ibc-go v1.0.0-beta1.0.20210729155445-a9cdf5aeb6b5 h1:kU56eP6PE
 github.com/cosmos/ibc-go v1.0.0-beta1.0.20210729155445-a9cdf5aeb6b5/go.mod h1:ML0dQhHzmDzcINJAroRg7aTNUgAoOJl3T8hMI0L/pVo=
 github.com/cosmos/ibc-go v1.0.0-beta1.0.20210802140125-e66b5cec6313 h1:/gIEI1O52a9+3Jr+A/1JzZFgPAWXSRoQnK5kOfVA/Yo=
 github.com/cosmos/ibc-go v1.0.0-beta1.0.20210802140125-e66b5cec6313/go.mod h1:NY7JejT7gS4VteRdxFaaI3KAls8ckUrS2ozSH1j5pRs=
+github.com/cosmos/ibc-go v1.0.0-beta1.0.20210809094211-881276fd3372 h1:LScNpBsI5hyX86QVpRUG264TgMz1tN/6UMZ31EqL7p4=
+github.com/cosmos/ibc-go v1.0.0-beta1.0.20210809094211-881276fd3372/go.mod h1:ML0dQhHzmDzcINJAroRg7aTNUgAoOJl3T8hMI0L/pVo=
 github.com/cosmos/ledger-cosmos-go v0.11.1 h1:9JIYsGnXP613pb2vPjFeMMjBI5lEDsEaF6oYorTy6J4=
 github.com/cosmos/ledger-cosmos-go v0.11.1/go.mod h1:J8//BsAGTo3OC/vDLjMRFLW6q0WAaXvHnVc7ZmE8iUY=
 github.com/cosmos/ledger-go v0.9.2 h1:Nnao/dLwaVTk1Q5U9THldpUMMXU94BOTWPddSmVB6pI=

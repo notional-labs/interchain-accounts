@@ -3,8 +3,8 @@ module github.com/cosmos/interchain-accounts
 go 1.15
 
 require (
-	github.com/cosmos/cosmos-sdk v0.43.0-rc0
-	github.com/cosmos/ibc-go v1.0.0-beta1.0.20210802140125-e66b5cec6313
+	github.com/cosmos/cosmos-sdk v0.43.0-rc1
+	github.com/cosmos/ibc-go v1.0.0-beta1.0.20210809094211-881276fd3372
 	github.com/gogo/protobuf v1.3.3
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
