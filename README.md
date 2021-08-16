@@ -15,7 +15,7 @@ make install
 In order to use the hermes relayer you will need to check out a specific branch that can be used with interchain-accounts. 
 
 git clone https://github.com/informalsystems/ibc-rs
-git checkout adi/ibc-go-1-proto
+git checkout 97360a0c
 cd relayer-cli
 cargo build
 
