@@ -339,7 +339,7 @@ func New(
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 
 	app.ibcAccountKeeper = ibcaccountkeeper.NewKeeper(
-		keys[ibcaccounttypes.MemStoreKey], appCodec, keys[ibcaccounttypes.StoreKey],
+		appCodec, keys[ibcaccounttypes.StoreKey],
 		app.IBCKeeper.ChannelKeeper, &app.IBCKeeper.PortKeeper,
 		app.AccountKeeper, scopedIbcAccountKeeper, app.MsgServiceRouter(), app,
 	)
@@ -479,7 +479,8 @@ func New(
 		// Note that since this reads from the store, we can only perform it when
 		// `loadLatest` is set to true.
 		ctx := app.BaseApp.NewUncachedContext(true, tmproto.Header{})
-		app.CapabilityKeeper.InitializeAndSeal(ctx)
+		app.CapabilityKeeper.InitMemStore(ctx)
+		app.CapabilityKeeper.Seal()
 	}
 
 	app.ScopedIBCKeeper = scopedIBCKeeper
