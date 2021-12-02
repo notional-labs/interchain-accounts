@@ -24,7 +24,7 @@ func (k msgServer) Register(
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	acc, err := sdk.AccAddressFromBech32(msg.Owner)
 	if err != nil {
-		return &types.MsgRegisterAccountResponse{}, err
+		return nil, err
 	}
 
 	err = k.RegisterInterchainAccount(
@@ -34,7 +34,7 @@ func (k msgServer) Register(
 		msg.CounterpartyConnectionId,
 	)
 	if err != nil {
-		return &types.MsgRegisterAccountResponse{}, err
+		return nil, err
 	}
 
 	return &types.MsgRegisterAccountResponse{}, nil
