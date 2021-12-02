@@ -3,9 +3,10 @@ package inter_tx
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	"github.com/cosmos/interchain-accounts/x/inter-tx/keeper"
 
-	"github.com/cosmos/ibc-go/v2/modules/apps/27-interchain-accounts/controller/keeper"
 	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
+	host "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	ibcexported "github.com/cosmos/ibc-go/v2/modules/core/exported"
 )
 
@@ -32,7 +33,7 @@ func (im IBCModule) OnChanOpenInit(
 	counterparty channeltypes.Counterparty,
 	version string,
 ) error {
-	return nil
+	return im.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID))
 }
 
 // OnChanOpenTry implements the IBCModule interface
