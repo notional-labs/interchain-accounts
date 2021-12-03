@@ -13,7 +13,7 @@ import (
 )
 
 // IBCAccountFromAddress implements the Query/IBCAccount gRPC method
-func (k Keeper) IBCAccountFromAddress(ctx context.Context, req *types.QueryIBCAccountFromAddressRequest) (*types.QueryIBCAccountFromAddressResponse, error) {
+func (k Keeper) InterchainAccountFromAddress(ctx context.Context, req *types.QueryInterchainAccountFromAddressRequest) (*types.QueryInterchainAccountFromAddressResponse, error) {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 
 	portId, err := icatypes.GeneratePortID(req.Address.String(), req.ConnectionId, req.CounterpartyConnectionId)
