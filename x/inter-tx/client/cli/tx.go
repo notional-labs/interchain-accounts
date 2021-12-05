@@ -30,41 +30,8 @@ func GetTxCmd() *cobra.Command {
 
 	// this line is used by starport scaffolding # 1
 	cmd.AddCommand(
-		getRegisterAccountCmd(),
 		getSendTxCmd(),
 	)
-
-	return cmd
-}
-
-func getRegisterAccountCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use: "register --connection-id",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			connectionId := viper.GetString(FlagConnectionId)
-
-			msg := types.NewMsgRegisterAccount(
-				clientCtx.GetFromAddress().String(),
-				connectionId,
-			)
-
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	cmd.Flags().AddFlagSet(fsConnectionId)
-	_ = cmd.MarkFlagRequired(FlagConnectionId)
-
-	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
 }
@@ -116,3 +83,5 @@ func getSendTxCmd() *cobra.Command {
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
+
+// func

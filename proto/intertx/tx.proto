@@ -11,29 +11,15 @@ import "ibc/core/client/v1/client.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
 service Msg {
-  rpc Register(MsgRegisterAccount) returns (MsgRegisterAccountResponse);
   rpc Send(MsgSend) returns (MsgSendResponse);
 }
 
-//MsgRegisterAccount is used to register an interchain account on a target chain 
-message MsgRegisterAccount {
-  option (gogoproto.equal)           = false;
-  option (gogoproto.goproto_getters) = false;
-
-  string owner = 1;
-  string connectionId = 2;
-}
-
-message MsgRegisterAccountResponse {}
-
 // MsgSend is used to send coins from an interchain account to another account on the same chain
 message MsgSend {
-  string   interchain_account              = 1;
-  bytes    owner                    = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  string   to_address                      = 3;
-  repeated cosmos.base.v1beta1.Coin amount = 4
-      [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
-  string  connectionId = 5;
+  string   prefix_on_destchain              = 1;
+  string    owner                    = 2;
+  string  channel_id = 3;
+  bytes msgs = 4;
 }
 
 // MsgSendResponse defines the Msg/Send response type.

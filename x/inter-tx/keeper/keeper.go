@@ -2,23 +2,20 @@ package keeper
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibcacckeeper "github.com/cosmos/ibc-go/modules/apps/27-interchain-accounts/keeper"
+	channelkeeper "github.com/cosmos/ibc-go/modules/core/04-channel/keeper"
 )
 
 type Keeper struct {
-	cdc      codec.Codec
-	storeKey sdk.StoreKey
-	memKey   sdk.StoreKey
-
-	iaKeeper ibcacckeeper.Keeper
+	cdc           codec.Codec
+	iaKeeper      ibcacckeeper.Keeper
+	channelkeeper channelkeeper.Keeper
 }
 
-func NewKeeper(cdc codec.Codec, storeKey sdk.StoreKey, iaKeeper ibcacckeeper.Keeper) Keeper {
+func NewKeeper(cdc codec.Codec, iaKeeper ibcacckeeper.Keeper, channelkeeper channelkeeper.Keeper) Keeper {
 	return Keeper{
-		cdc:      cdc,
-		storeKey: storeKey,
-
-		iaKeeper: iaKeeper,
+		cdc:           cdc,
+		channelkeeper: channelkeeper,
+		iaKeeper:      iaKeeper,
 	}
 }

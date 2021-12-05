@@ -20,7 +20,8 @@ message QueryIBCAccountFromAddressRequest {
   bytes address = 1
     [ (gogoproto.casttype) =
        "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  string connectionId = 2;
+  string channelId = 2;
+  string prefix = 3;
 }
  
 message QueryIBCAccountFromAddressResponse {
