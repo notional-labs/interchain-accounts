@@ -81,3 +81,15 @@ func SdkMsgFromFile(fileDir string, msgType string) (sdk.Msg, error) {
 	}
 	return nil, nil
 }
+
+func SdkMsgsFromFiles(fileDirs []string, msgTypes []string) ([]sdk.Msg, error) {
+	msgs := make([]sdk.Msg, len(fileDirs))
+	for id, fileDir := range fileDirs {
+		msg, err := SdkMsgFromFile(fileDir, msgTypes[id])
+		if err != nil {
+			return nil, err
+		}
+		msgs[id] = msg
+	}
+	return msgs, nil
+}

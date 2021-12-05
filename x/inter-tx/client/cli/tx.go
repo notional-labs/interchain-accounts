@@ -2,15 +2,14 @@ package cli
 
 import (
 	"fmt"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	ibcatypes "github.com/cosmos/ibc-go/modules/apps/27-interchain-accounts/types"
 	"github.com/cosmos/interchain-accounts/x/inter-tx/types"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 const (
@@ -45,27 +44,27 @@ func getSendTxCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			cdc := clientCtx.Codec
+			ownerAddr := clientCtx.GetFromAddress().String()
+			prefixOfDestChain := args[0]
+			channelID := args[1]
 
-			ownerAddr := clientCtx.GetFromAddress()
-			interchainAccountAddr := args[0]
-			toAddress := args[1]
+			listOfFiles := strings.Split(args[2], ",")
+			listOfTxType := strings.Split(args[3], ",")
+
+			crossChainMsgs, err := types.SdkMsgsFromFiles(listOfFiles, listOfTxType)
 			if err != nil {
 				return err
 			}
-
-			amount, err := sdk.ParseCoinsNormalized(args[2])
+			crossChainMsgsBz, err := ibcatypes.SerializeCosmosTx(
+				cdc, crossChainMsgs,
+			)
 			if err != nil {
 				return err
 			}
-
-			connectionId := viper.GetString(FlagConnectionId)
 
 			msg := types.NewMsgSend(
-				interchainAccountAddr,
-				ownerAddr,
-				toAddress,
-				amount,
-				connectionId,
+				prefixOfDestChain, ownerAddr, channelID, crossChainMsgsBz,
 			)
 
 			if err := msg.ValidateBasic(); err != nil {
