@@ -101,10 +101,11 @@ import (
 	v6 "github.com/cosmos/interchain-accounts/app/upgrades/v6"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 
-	// this line is used by starport scaffolding # stargate/app/moduleImport
 	intertx "github.com/cosmos/interchain-accounts/x/inter-tx"
 	intertxkeeper "github.com/cosmos/interchain-accounts/x/inter-tx/keeper"
 	intertxtypes "github.com/cosmos/interchain-accounts/x/inter-tx/types"
+
+	ibctestingtypes "github.com/cosmos/ibc-go/v6/testing/types"
 )
 
 const Name = "ica"
@@ -364,11 +365,15 @@ func New(
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
 
+	// IBC Fee Module keeper
 	app.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
-		appCodec, keys[ibcfeetypes.StoreKey], app.GetSubspace(ibcfeetypes.ModuleName),
+		appCodec,
+		keys[ibcfeetypes.StoreKey],
 		app.IBCKeeper.ChannelKeeper, // may be replaced with IBC middleware
 		app.IBCKeeper.ChannelKeeper,
-		&app.IBCKeeper.PortKeeper, app.AccountKeeper, app.BankKeeper,
+		&app.IBCKeeper.PortKeeper,
+		app.AccountKeeper,
+		app.BankKeeper,
 	)
 
 	app.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
@@ -727,7 +732,7 @@ func (app *App) GetBaseApp() *baseapp.BaseApp {
 }
 
 // GetStakingKeeper implements the TestingApp interface.
-func (app *App) GetStakingKeeper() stakingkeeper.Keeper {
+func (app *App) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 	return app.StakingKeeper
 }
 
