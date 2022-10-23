@@ -4,7 +4,7 @@ go 1.18
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
-replace github.com/cosmos/ibc-go/v6 => github.com/notional-labs/ibc-go/v6 v6.0.0-20221022192849-bafae9c434f6
+replace github.com/cosmos/ibc-go/v6 => github.com/notional-labs/ibc-go/v6 v6.0.0-20221023041313-c80ae83adf04
 
 require (
 	github.com/cosmos/cosmos-sdk v0.46.4-0.20221021120231-7f88c60e70d1
