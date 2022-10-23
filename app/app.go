@@ -98,6 +98,7 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v6/modules/core/keeper"
 	appparams "github.com/cosmos/interchain-accounts/app/params"
+	v6 "github.com/cosmos/interchain-accounts/app/upgrades/v6"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 
 	intertx "github.com/cosmos/interchain-accounts/x/inter-tx"
@@ -514,7 +515,7 @@ func New(
 	app.SetEndBlocker(app.EndBlocker)
 
 	// suspect that these caused an issue.
-	// app.setupUpgradeHandlers()
+	app.setupUpgradeHandlers()
 
 	if loadLatest {
 		if err := app.LoadLatestVersion(); err != nil {
@@ -705,7 +706,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	return paramsKeeper
 }
 
-/*
 // setupUpgradeHandlers sets all necessary upgrade handlers for testing purposes
 func (app *App) setupUpgradeHandlers() {
 	// NOTE: The moduleName arg of v6.CreateUpgradeHandler refers to the auth module ScopedKeeper name to which the channel capability should be migrated from.
@@ -724,7 +724,6 @@ func (app *App) setupUpgradeHandlers() {
 		),
 	)
 }
-*/
 
 // TestingApp functions
 
