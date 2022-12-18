@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"cosmossdk.io/simapp"
 	"github.com/spf13/cobra"
 	tmconfig "github.com/tendermint/tendermint/config"
 	tmos "github.com/tendermint/tendermint/libs/os"
@@ -415,7 +416,7 @@ func collectGenFiles(
 			return err
 		}
 
-		nodeAppState, err := genutil.GenAppStateFromConfig(clientCtx.Codec, clientCtx.TxConfig, nodeConfig, initCfg, *genDoc, genBalIterator)
+		nodeAppState, err := genutil.GenAppStateFromConfig(clientCtx.Codec, clientCtx.TxConfig, nodeConfig, initCfg, *genDoc, genBalIterator, genutiltypes.DefaultMessageValidator)
 		if err != nil {
 			return err
 		}
@@ -479,7 +480,7 @@ func writeFile(name string, dir string, contents []byte) error {
 
 // startTestnet starts an in-process testnet
 func startTestnet(cmd *cobra.Command, args startArgs) error {
-	networkConfig := network.DefaultConfig()
+	networkConfig := network.DefaultConfig(simapp.NewTestNetworkFixture)
 
 	// Default networkConfig.ChainID is random, and we should only override it if chainID provided
 	// is non-empty
