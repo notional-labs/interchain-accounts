@@ -555,12 +555,12 @@ func (app *App) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.Res
 	}
 
 	icaGenesisState.HostGenesisState.Params.AllowMessages = []string{"*"} // allow all msgs
-	genesisJson, err := app.cdc.MarshalJSON(icaGenesisState)
+	genesisJSON, err := app.cdc.MarshalJSON(icaGenesisState)
 	if err != nil {
 		panic(err)
 	}
 
-	genesisState[icatypes.ModuleName] = genesisJson
+	genesisState[icatypes.ModuleName] = genesisJSON
 
 	app.UpgradeKeeper.SetModuleVersionMap(ctx, app.mm.GetVersionMap())
 

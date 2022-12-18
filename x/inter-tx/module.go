@@ -1,4 +1,4 @@
-package inter_tx
+package intertx
 
 import (
 	"context"
