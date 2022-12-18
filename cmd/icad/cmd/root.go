@@ -232,10 +232,6 @@ func txCommand() *cobra.Command {
 	return cmd
 }
 
-type appCreator struct {
-	encCfg params.EncodingConfig
-}
-
 // newApp creates the application
 func newApp(
 	logger log.Logger,
