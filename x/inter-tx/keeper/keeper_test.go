@@ -39,7 +39,7 @@ func init() {
 func SetupICATestingApp() (ibctesting.TestingApp, map[string]json.RawMessage) {
 	db := dbm.NewMemDB()
 	encCdc := icaapp.MakeEncodingConfig()
-	app := icaapp.New(log.NewNopLogger(), db, nil, true, map[int64]bool{}, icaapp.DefaultNodeHome, 5, encCdc, icaapp.EmptyAppOptions{})
+	app := icaapp.New(log.NewNopLogger(), db, nil, true, icaapp.EmptyAppOptions{})
 	return app, icaapp.NewDefaultGenesisState(encCdc.Codec)
 }
 
