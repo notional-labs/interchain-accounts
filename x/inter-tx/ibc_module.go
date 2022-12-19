@@ -1,4 +1,4 @@
-package inter_tx
+package intertx
 
 import (
 	proto "github.com/gogo/protobuf/proto"
