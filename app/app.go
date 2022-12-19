@@ -720,8 +720,16 @@ func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig
 	// Register new tendermint queries routes from grpc-gateway.
 	tmservice.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
 
+	// Register node gRPC service for grpc-gateway.
+	nodeservice.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
+
 	// Register legacy and grpc-gateway routes for all modules.
 	ModuleBasics.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
+
+	// register swagger API from root so that other applications can override easily
+	if err := server.RegisterSwaggerAPI(apiSvr.ClientCtx, apiSvr.Router, apiConfig.Swagger); err != nil {
+		panic(err)
+	}
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
@@ -809,9 +817,9 @@ func (app *App) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
 	return app.ScopedIBCKeeper
 }
 
-// GetTxConfig implements the TestingApp interface.
+// TxConfig returns SimApp's TxConfig
 func (app *App) GetTxConfig() client.TxConfig {
-	return MakeEncodingConfig().TxConfig
+	return app.txConfig
 }
 
 // EmptyAppOptions is a stub implementing AppOptions

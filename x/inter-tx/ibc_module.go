@@ -1,7 +1,7 @@
-package intertx
+package inter_tx
 
 import (
-	proto "github.com/cosmos/gogoproto/proto"
+	proto "github.com/gogo/protobuf/proto"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -149,7 +149,7 @@ func (im IBCModule) OnTimeoutPacket(
 	return nil
 }
 
-func handleMsgData(ctx sdk.Context, msgData *sdk.MsgData) (string, error) { //nolint:staticcheck // SA1019: sdk.MsgData is deprecated: Do not use.
+func handleMsgData(ctx sdk.Context, msgData *sdk.MsgData) (string, error) {
 	switch msgData.MsgType {
 	case sdk.MsgTypeURL(&banktypes.MsgSend{}):
 		msgResponse := &banktypes.MsgSendResponse{}

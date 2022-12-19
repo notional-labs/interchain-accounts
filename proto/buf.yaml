@@ -7,11 +7,13 @@ version: v1
 deps:
   # TODO: update sdk buf dependency when v0.47.0 is tagged and pushed to BSR
   # see: (https://github.com/cosmos/cosmos-sdk/tree/main/proto#sdk-x-buf)
-  - buf.build/cosmos/cosmos-sdk:7ea623782a4d4f11b35627913a7bc481
+  - buf.build/cosmos/cosmos-sdk:eb61146c5ec65d25980cc8a2ca8e1360c9e4a9a5
   - buf.build/cosmos/cosmos-proto:1935555c206d4afb9e94615dfd0fad31
   - buf.build/cosmos/gogo-proto:a14993478f40695898ed8a86931094b6656e8a5d
   - buf.build/googleapis/googleapis:8d7204855ec14631a499bd7393ce1970
   - buf.build/cosmos/ics23:b1abd8678aab07165efd453c96796a179eb3131f
+  - buf.build/cosmos/ibc:4befa470390ffe1d9c37c6987944d342a55da616
+
 breaking:
   use:
     - FILE
