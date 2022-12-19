@@ -274,6 +274,7 @@ func New(
 		banktypes.StoreKey,
 		stakingtypes.StoreKey,
 		consensusparamtypes.StoreKey,
+		crisistypes.StoreKey,
 		minttypes.StoreKey,
 		distrtypes.StoreKey,
 		slashingtypes.StoreKey,
