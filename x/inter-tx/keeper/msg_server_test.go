@@ -94,7 +94,7 @@ func (suite *KeeperTestSuite) TestSubmitTx() {
 		path                      *ibctesting.Path
 		registerInterchainAccount bool
 		owner                     string
-		connectionId              string
+		connectionID              string
 		icaMsg                    sdk.Msg
 	)
 
@@ -107,28 +107,28 @@ func (suite *KeeperTestSuite) TestSubmitTx() {
 			"success", func() {
 				registerInterchainAccount = true
 				owner = TestOwnerAddress
-				connectionId = path.EndpointA.ConnectionID
+				connectionID = path.EndpointA.ConnectionID
 			}, true,
 		},
 		{
 			"failure - owner address is empty", func() {
 				registerInterchainAccount = true
 				owner = ""
-				connectionId = path.EndpointA.ConnectionID
+				connectionID = path.EndpointA.ConnectionID
 			}, false,
 		},
 		{
 			"failure - active channel does not exist for connection ID", func() {
 				registerInterchainAccount = true
 				owner = TestOwnerAddress
-				connectionId = "connection-100"
+				connectionID = "connection-100"
 			}, false,
 		},
 		{
 			"failure - active channel does not exist for port ID", func() {
 				registerInterchainAccount = true
 				owner = "cosmos153lf4zntqt33a4v0sm5cytrxyqn78q7kz8j8x5"
-				connectionId = path.EndpointA.ConnectionID
+				connectionID = path.EndpointA.ConnectionID
 			}, false,
 		},
 	}
@@ -174,7 +174,7 @@ func (suite *KeeperTestSuite) TestSubmitTx() {
 			}
 
 			msgSrv := keeper.NewMsgServerImpl(icaAppA.InterTxKeeper)
-			msg, err := types.NewMsgSubmitTx(icaMsg, connectionId, owner)
+			msg, err := types.NewMsgSubmitTx(icaMsg, connectionID, owner)
 			suite.Require().NoError(err)
 
 			res, err := msgSrv.SubmitTx(sdk.WrapSDKContext(suite.chainA.GetContext()), msg)

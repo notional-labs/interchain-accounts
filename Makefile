@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 PACKAGES=$(shell go list ./...)
 DOCKER := $(shell which docker)
-DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.0.0-rc8
+DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.9.0
 
 ###############################################################################
 ###                           Install                                       ###
