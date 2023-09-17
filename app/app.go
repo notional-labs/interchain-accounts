@@ -855,3 +855,13 @@ func (app *App) RegisterNodeService(clientCtx client.Context) {
 func (app *App) SimulationManager() *module.SimulationManager {
 	return app.sm
 }
+
+// DefaultGenesis returns a default genesis from the registered AppModuleBasic's.
+func (app *App) DefaultGenesis() map[string]json.RawMessage {
+	return ModuleBasics.DefaultGenesis(app.appCodec)
+}
+
+// TxConfig returns SimApp's TxConfig
+func (app *App) TxConfig() client.TxConfig {
+	return app.txConfig
+}
