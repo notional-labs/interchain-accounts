@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/stretchr/testify/suite"
+
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
-	"github.com/stretchr/testify/suite"
 
 	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
@@ -60,10 +61,10 @@ func TestKeeperTestSuite(t *testing.T) {
 }
 
 // SetupTest creates a coordinator with 2 test chains.
-func (suite *KeeperTestSuite) SetupTest() {
-	suite.coordinator = ibctesting.NewCoordinator(suite.T(), 2)
-	suite.chainA = suite.coordinator.GetChain(ibctesting.GetChainID(1))
-	suite.chainB = suite.coordinator.GetChain(ibctesting.GetChainID(2))
+func (s *KeeperTestSuite) SetupTest() {
+	s.coordinator = ibctesting.NewCoordinator(s.T(), 2)
+	s.chainA = s.coordinator.GetChain(ibctesting.GetChainID(1))
+	s.chainB = s.coordinator.GetChain(ibctesting.GetChainID(2))
 }
 
 func NewICAPath(chainA, chainB *ibctesting.TestChain) *ibctesting.Path {

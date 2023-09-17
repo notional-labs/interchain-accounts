@@ -4,11 +4,13 @@ import (
 	fmt "fmt"
 	"strings"
 
+	proto "github.com/gogo/protobuf/proto"
+
 	errorsmod "cosmossdk.io/errors"
+
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	proto "github.com/gogo/protobuf/proto"
 )
 
 var (

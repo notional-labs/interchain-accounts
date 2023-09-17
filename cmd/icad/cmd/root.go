@@ -5,12 +5,9 @@ import (
 	"io"
 	"os"
 
-	rosettaCmd "cosmossdk.io/tools/rosetta/cmd"
-	dbm "github.com/cometbft/cometbft-db"
-	tmcfg "github.com/cometbft/cometbft/config"
-	"github.com/cometbft/cometbft/libs/log"
-	"github.com/cosmos/interchain-accounts/app"
 	"github.com/spf13/cobra"
+
+	rosettaCmd "cosmossdk.io/tools/rosetta/cmd"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/config"
@@ -25,9 +22,14 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+
+	dbm "github.com/cometbft/cometbft-db"
+	tmcfg "github.com/cometbft/cometbft/config"
+	"github.com/cometbft/cometbft/libs/log"
+
+	"github.com/cosmos/interchain-accounts/app"
 	"github.com/cosmos/interchain-accounts/app/params"
 )
 
@@ -153,7 +155,6 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 
 	rootCmd.AddCommand(
 		genutilcli.InitCmd(app.ModuleBasics, app.DefaultNodeHome),
-		NewTestnetCmd(app.ModuleBasics, banktypes.GenesisBalancesIterator{}),
 		debug.Cmd(),
 		config.Cmd(),
 		pruning.PruningCmd(newApp),
@@ -260,21 +261,21 @@ func newApp(
 func appExport(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, height int64, forZeroHeight bool, jailAllowedAddrs []string, appOpts servertypes.AppOptions, modulesToExport []string,
 ) (servertypes.ExportedApp, error) {
-	var App *app.App
+	var icaApp *app.App
 	homePath, ok := appOpts.Get(flags.FlagHome).(string)
 	if !ok || homePath == "" {
 		return servertypes.ExportedApp{}, errors.New("application home not set")
 	}
 
 	if height != -1 {
-		App = app.New(logger, db, traceStore, false, appOpts)
+		icaApp = app.New(logger, db, traceStore, false, appOpts)
 
-		if err := App.LoadHeight(height); err != nil {
+		if err := icaApp.LoadHeight(height); err != nil {
 			return servertypes.ExportedApp{}, err
 		}
 	} else {
-		App = app.New(logger, db, traceStore, true, appOpts)
+		icaApp = app.New(logger, db, traceStore, true, appOpts)
 	}
 
-	return App.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
+	return icaApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
 }

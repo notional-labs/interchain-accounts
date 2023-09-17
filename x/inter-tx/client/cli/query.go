@@ -1,10 +1,12 @@
 package cli
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+
 	"github.com/cosmos/interchain-accounts/x/inter-tx/types"
-	"github.com/spf13/cobra"
 )
 
 // GetQueryCmd creates and returns the intertx query command

@@ -3,6 +3,7 @@ package keeper_test
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+
 	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
@@ -11,7 +12,7 @@ import (
 	"github.com/cosmos/interchain-accounts/x/inter-tx/types"
 )
 
-func (suite *KeeperTestSuite) TestRegisterInterchainAccount() {
+func (s *KeeperTestSuite) TestRegisterInterchainAccount() {
 	var (
 		owner string
 		path  *ibctesting.Path
@@ -28,7 +29,7 @@ func (suite *KeeperTestSuite) TestRegisterInterchainAccount() {
 		{
 			"failure - port is already bound",
 			func() {
-				GetICAApp(suite.chainA).IBCKeeper.PortKeeper.BindPort(suite.chainA.GetContext(), TestPortID)
+				GetICAApp(s.chainA).IBCKeeper.PortKeeper.BindPort(s.chainA.GetContext(), TestPortID)
 			},
 			false,
 		},
@@ -43,7 +44,7 @@ func (suite *KeeperTestSuite) TestRegisterInterchainAccount() {
 			"failure - channel is already active",
 			func() {
 				portID, err := icatypes.NewControllerPortID(owner)
-				suite.Require().NoError(err)
+				s.Require().NoError(err)
 
 				channel := channeltypes.NewChannel(
 					channeltypes.OPEN,
@@ -53,8 +54,8 @@ func (suite *KeeperTestSuite) TestRegisterInterchainAccount() {
 					path.EndpointA.ChannelConfig.Version,
 				)
 
-				GetICAApp(suite.chainA).IBCKeeper.ChannelKeeper.SetChannel(suite.chainA.GetContext(), portID, ibctesting.FirstChannelID, channel)
-				GetICAApp(suite.chainA).ICAControllerKeeper.SetActiveChannelID(suite.chainA.GetContext(), ibctesting.FirstConnectionID, portID, ibctesting.FirstChannelID)
+				GetICAApp(s.chainA).IBCKeeper.ChannelKeeper.SetChannel(s.chainA.GetContext(), portID, ibctesting.FirstChannelID, channel)
+				GetICAApp(s.chainA).ICAControllerKeeper.SetActiveChannelID(s.chainA.GetContext(), ibctesting.FirstConnectionID, portID, ibctesting.FirstChannelID)
 			},
 			false,
 		},
@@ -63,33 +64,33 @@ func (suite *KeeperTestSuite) TestRegisterInterchainAccount() {
 	for _, tc := range testCases {
 		tc := tc
 
-		suite.Run(tc.name, func() {
-			suite.SetupTest()
+		s.Run(tc.name, func() {
+			s.SetupTest()
 
 			owner = TestOwnerAddress // must be explicitly changed
 
-			path = NewICAPath(suite.chainA, suite.chainB)
-			suite.coordinator.SetupConnections(path)
+			path = NewICAPath(s.chainA, s.chainB)
+			s.coordinator.SetupConnections(path)
 
 			tc.malleate() // malleate mutates test data
 
-			msgSrv := keeper.NewMsgServerImpl(GetICAApp(suite.chainA).InterTxKeeper)
+			msgSrv := keeper.NewMsgServerImpl(GetICAApp(s.chainA).InterTxKeeper)
 			msg := types.NewMsgRegisterAccount(owner, path.EndpointA.ConnectionID, path.EndpointA.ChannelConfig.Version)
 
-			res, err := msgSrv.RegisterAccount(sdk.WrapSDKContext(suite.chainA.GetContext()), msg)
+			res, err := msgSrv.RegisterAccount(sdk.WrapSDKContext(s.chainA.GetContext()), msg)
 
 			if tc.expPass {
-				suite.Require().NoError(err)
-				suite.Require().NotNil(res)
+				s.Require().NoError(err)
+				s.Require().NotNil(res)
 			} else {
-				suite.Require().Error(err)
-				suite.Require().Nil(res)
+				s.Require().Error(err)
+				s.Require().Nil(res)
 			}
 		})
 	}
 }
 
-func (suite *KeeperTestSuite) TestSubmitTx() {
+func (s *KeeperTestSuite) TestSubmitTx() {
 	var (
 		path                      *ibctesting.Path
 		registerInterchainAccount bool
@@ -136,55 +137,55 @@ func (suite *KeeperTestSuite) TestSubmitTx() {
 	for _, tc := range testCases {
 		tc := tc
 
-		suite.Run(tc.name, func() {
-			suite.SetupTest()
+		s.Run(tc.name, func() {
+			s.SetupTest()
 
-			icaAppA := GetICAApp(suite.chainA)
-			icaAppB := GetICAApp(suite.chainB)
+			icaAppA := GetICAApp(s.chainA)
+			icaAppB := GetICAApp(s.chainB)
 
-			path = NewICAPath(suite.chainA, suite.chainB)
-			suite.coordinator.SetupConnections(path)
+			path = NewICAPath(s.chainA, s.chainB)
+			s.coordinator.SetupConnections(path)
 
 			tc.malleate() // malleate mutates test data
 
 			if registerInterchainAccount {
 				err := SetupICAPath(path, TestOwnerAddress)
-				suite.Require().NoError(err)
+				s.Require().NoError(err)
 
 				portID, err := icatypes.NewControllerPortID(TestOwnerAddress)
-				suite.Require().NoError(err)
+				s.Require().NoError(err)
 
 				// Get the address of the interchain account stored in state during handshake step
-				interchainAccountAddr, found := GetICAApp(suite.chainA).ICAControllerKeeper.GetInterchainAccountAddress(suite.chainA.GetContext(), path.EndpointA.ConnectionID, portID)
-				suite.Require().True(found)
+				interchainAccountAddr, found := GetICAApp(s.chainA).ICAControllerKeeper.GetInterchainAccountAddress(s.chainA.GetContext(), path.EndpointA.ConnectionID, portID)
+				s.Require().True(found)
 
 				icaAddr, err := sdk.AccAddressFromBech32(interchainAccountAddr)
-				suite.Require().NoError(err)
+				s.Require().NoError(err)
 
 				// Check if account is created
-				interchainAccount := icaAppB.AccountKeeper.GetAccount(suite.chainB.GetContext(), icaAddr)
-				suite.Require().Equal(interchainAccount.GetAddress().String(), interchainAccountAddr)
+				interchainAccount := icaAppB.AccountKeeper.GetAccount(s.chainB.GetContext(), icaAddr)
+				s.Require().Equal(interchainAccount.GetAddress().String(), interchainAccountAddr)
 
 				// Create bank transfer message to execute on the host
 				icaMsg = &banktypes.MsgSend{
 					FromAddress: interchainAccountAddr,
-					ToAddress:   suite.chainB.SenderAccount.GetAddress().String(),
+					ToAddress:   s.chainB.SenderAccount.GetAddress().String(),
 					Amount:      sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100))),
 				}
 			}
 
 			msgSrv := keeper.NewMsgServerImpl(icaAppA.InterTxKeeper)
 			msg, err := types.NewMsgSubmitTx(icaMsg, connectionID, owner)
-			suite.Require().NoError(err)
+			s.Require().NoError(err)
 
-			res, err := msgSrv.SubmitTx(sdk.WrapSDKContext(suite.chainA.GetContext()), msg)
+			res, err := msgSrv.SubmitTx(sdk.WrapSDKContext(s.chainA.GetContext()), msg)
 
 			if tc.expPass {
-				suite.Require().NoError(err)
-				suite.Require().NotNil(res)
+				s.Require().NoError(err)
+				s.Require().NotNil(res)
 			} else {
-				suite.Require().Error(err)
-				suite.Require().Nil(res)
+				s.Require().Error(err)
+				s.Require().Nil(res)
 			}
 		})
 	}

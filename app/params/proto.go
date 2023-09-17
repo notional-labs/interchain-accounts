@@ -10,12 +10,12 @@ import (
 func MakeEncodingConfig() EncodingConfig {
 	amino := codec.NewLegacyAmino()
 	interfaceRegistry := types.NewInterfaceRegistry()
-	codec := codec.NewProtoCodec(interfaceRegistry)
-	txCfg := tx.NewTxConfig(codec, tx.DefaultSignModes)
+	cdc := codec.NewProtoCodec(interfaceRegistry)
+	txCfg := tx.NewTxConfig(cdc, tx.DefaultSignModes)
 
 	return EncodingConfig{
 		InterfaceRegistry: interfaceRegistry,
-		Codec:             codec,
+		Codec:             cdc,
 		TxConfig:          txCfg,
 		Amino:             amino,
 	}
