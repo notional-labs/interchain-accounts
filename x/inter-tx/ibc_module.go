@@ -132,7 +132,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 		return nil
 	default:
 		for _, msgData := range txMsgData.Data {
-			response, err := handleMsgData(ctx, msgData)
+			response, err := handleMsgData(msgData)
 			if err != nil {
 				return err
 			}
@@ -152,7 +152,7 @@ func (IBCModule) OnTimeoutPacket(
 	return nil
 }
 
-func handleMsgData(ctx sdk.Context, msgData *sdk.MsgData) (string, error) { //nolint:staticcheck // SA1019: sdk.MsgData is deprecated: Do not use.
+func handleMsgData(msgData *sdk.MsgData) (string, error) { //nolint:staticcheck // SA1019: sdk.MsgData is deprecated: Do not use.
 	switch msgData.MsgType {
 	case sdk.MsgTypeURL(&banktypes.MsgSend{}):
 		msgResponse := &banktypes.MsgSendResponse{}
