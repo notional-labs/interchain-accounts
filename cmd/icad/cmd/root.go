@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 
 	rosettaCmd "cosmossdk.io/tools/rosetta/cmd"
+	simapp "github.com/cosmos/interchain-accounts/v7/app"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/config"
@@ -247,9 +248,10 @@ func newApp(
 	traceStore io.Writer,
 	appOpts servertypes.AppOptions,
 ) servertypes.Application {
+
 	baseappOptions := server.DefaultBaseappOptions(appOpts)
 
-	return app.New(
+	return simapp.New(
 		logger, db, traceStore, true,
 		appOpts,
 		baseappOptions...,
