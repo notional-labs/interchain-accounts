@@ -15,7 +15,7 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 
-	"github.com/cosmos/interchain-accounts/x/inter-tx/keeper"
+	"github.com/cosmos/interchain-accounts/v7/x/inter-tx/keeper"
 )
 
 var _ porttypes.IBCModule = IBCModule{}

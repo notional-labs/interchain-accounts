@@ -16,9 +16,9 @@ import (
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
-	"github.com/cosmos/interchain-accounts/x/inter-tx/client/cli"
-	"github.com/cosmos/interchain-accounts/x/inter-tx/keeper"
-	"github.com/cosmos/interchain-accounts/x/inter-tx/types"
+	"github.com/cosmos/interchain-accounts/v7/x/inter-tx/client/cli"
+	"github.com/cosmos/interchain-accounts/v7/x/inter-tx/keeper"
+	"github.com/cosmos/interchain-accounts/v7/x/inter-tx/types"
 )
 
 var (

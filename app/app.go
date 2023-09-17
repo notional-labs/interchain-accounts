@@ -114,10 +114,10 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 
-	v6 "github.com/cosmos/interchain-accounts/app/upgrades/v6"
-	intertx "github.com/cosmos/interchain-accounts/x/inter-tx"
-	intertxkeeper "github.com/cosmos/interchain-accounts/x/inter-tx/keeper"
-	intertxtypes "github.com/cosmos/interchain-accounts/x/inter-tx/types"
+	v6 "github.com/cosmos/interchain-accounts/v7/app/upgrades/v6"
+	intertx "github.com/cosmos/interchain-accounts/v7/x/inter-tx"
+	intertxkeeper "github.com/cosmos/interchain-accounts/v7/x/inter-tx/keeper"
+	intertxtypes "github.com/cosmos/interchain-accounts/v7/x/inter-tx/types"
 )
 
 const Name = "ica"
@@ -854,4 +854,14 @@ func (app *App) RegisterNodeService(clientCtx client.Context) {
 // SimulationManager implements the SimulationApp interface
 func (app *App) SimulationManager() *module.SimulationManager {
 	return app.sm
+}
+
+// DefaultGenesis returns a default genesis from the registered AppModuleBasic's.
+func (a *App) DefaultGenesis() map[string]json.RawMessage {
+	return ModuleBasics.DefaultGenesis(a.appCodec)
+}
+
+// TxConfig returns SimApp's TxConfig
+func (app *App) TxConfig() client.TxConfig {
+	return app.txConfig
 }

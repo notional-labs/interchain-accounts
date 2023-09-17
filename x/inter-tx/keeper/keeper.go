@@ -13,7 +13,7 @@ import (
 
 	icacontrollerkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/keeper"
 
-	"github.com/cosmos/interchain-accounts/x/inter-tx/types"
+	"github.com/cosmos/interchain-accounts/v7/x/inter-tx/types"
 )
 
 type Keeper struct {
